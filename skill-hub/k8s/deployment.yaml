@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aetheris-skill-hub
+  namespace: aetheris
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aetheris-skill-hub
+  template:
+    metadata:
+      labels:
+        app: aetheris-skill-hub
+    spec:
+      containers:
+      - name: aetheris-skill-hub
+        image: aetheris-skill-hub:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+        envFrom:
+        - configMapRef:
+            name: aetheris-skill-hub-config
+        - secretRef:
+            name: aetheris-skill-hub-secret
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3

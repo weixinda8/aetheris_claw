@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aetheris-skill-hub
+  namespace: aetheris
+spec:
+  selector:
+    app: aetheris-skill-hub
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  type: ClusterIP

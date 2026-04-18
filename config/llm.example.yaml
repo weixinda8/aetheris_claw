@@ -1,0 +1,24 @@
+# LLM 配置示例 (YAML 格式)
+
+# LLM 提供商: deepseek (默认推荐), mock, openai, anthropic, azureopenai, 或自定义
+provider: deepseek
+
+# API 密钥 (仅用于真实 LLM 提供商)
+# 获取 DeepSeek API Key: https://platform.deepseek.com/
+api_key: your-deepseek-api-key-here
+
+# API 基础 URL (可选，用于自定义端点)
+api_base: https://api.deepseek.com/v1
+
+# 模型名称
+# DeepSeek 可用模型: deepseek-chat, deepseek-coder
+model: deepseek-chat
+
+# 温度参数 (0.0 - 2.0，值越高越随机)
+temperature: 0.7
+
+# 最大 token 数
+max_tokens: 2000
+
+# 超时时间 (秒)
+timeout_seconds: 30

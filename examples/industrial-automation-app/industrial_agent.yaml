@@ -1,0 +1,103 @@
+# 工业自动化示例应用代理配置
+meta:
+  id: "industrial-automation-app"
+  name: "工业自动化示例应用"
+  version: "1.0.0"
+  description: "展示与工业设备集成能力的示例应用，支持Modbus、OPC UA等工业协议"
+  author: "Aetheris Team"
+  tags:
+    - "industrial"
+    - "automation"
+    - "modbus"
+    - "opcua"
+  enabled: true
+  created_at: "2026-04-18T00:00:00Z"
+  updated_at: "2026-04-18T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的工业自动化助手，精通工业设备通信协议和生产监控。
+    你能够连接工业设备，读取传感器数据，监控生产状态，并提供预测性维护建议。
+    你会确保工业系统的稳定运行和优化生产效率。
+  name: "IndustrialAssistant"
+  description: "工业自动化助手"
+  soul_file: null
+  personality:
+    style: "专业严谨"
+    tone: "calm"
+    creativity: 0.3
+    empathy: 0.5
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.3
+  max_tokens: 2048
+  top_p: 0.9
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "production_monitoring"
+    - "predictive_maintenance"
+    - "file_operations"
+  priority:
+    "production_monitoring": "high"
+    "predictive_maintenance": "high"
+    "file_operations": "medium"
+  permissions:
+    - "production_monitoring"
+    - "predictive_maintenance"
+    - "file_operations"
+
+industrial:
+  protocols:
+    - name: "modbus_device"
+      type: "modbus"
+      config:
+        address: "192.168.1.100"
+        port: 502
+        slave_id: 1
+        timeout: 5000
+    - name: "opcua_server"
+      type: "opcua"
+      config:
+        endpoint: "opc.tcp://localhost:4840"
+        username: "user"
+        password: "password"
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 200
+    ttl_seconds: 7200
+  long_term:
+    enabled: true
+    storage_path: "./memory/industrial_assistant"
+  vector_db:
+    enabled: true
+    provider: "qdrant"
+    url: "http://localhost:6333"
+    collection_name: "industrial_assistant"
+
+security:
+  sandbox_enabled: true
+  sandbox_type: "docker"
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: false
+  allowed_commands:
+    - "modbus-cli"
+    - "opcua-cli"
+  blocked_commands:
+    - "rm -rf /"
+    - "mkfs"
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 10
+  task_timeout_seconds: 600
+  retry_policy:
+    max_retries: 3
+    retry_delay_seconds: 5

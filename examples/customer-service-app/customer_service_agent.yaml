@@ -1,0 +1,109 @@
+# 客户服务示例应用代理配置
+meta:
+  id: "customer-service-app"
+  name: "客户服务示例应用"
+  version: "1.0.0"
+  description: "展示智能客服能力的示例应用，支持多渠道客服、问题分类和自动回复"
+  author: "Aetheris Team"
+  tags:
+    - "customer-service"
+    - "support"
+    - "chatbot"
+    - "helpdesk"
+  enabled: true
+  created_at: "2026-04-18T00:00:00Z"
+  updated_at: "2026-04-18T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的客户服务代表，精通产品知识和客户沟通技巧。
+    你能够理解客户的问题，提供准确的解答，并在需要时升级问题。
+    你会保持友好、耐心的态度，确保客户满意度。
+    你能够处理多轮对话，记住客户的历史问题，并提供个性化的服务。
+  name: "CustomerService"
+  description: "智能客服助手"
+  soul_file: null
+  personality:
+    style: "专业友好"
+    tone: "warm"
+    creativity: 0.4
+    empathy: 0.9
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.4
+  max_tokens: 2048
+  top_p: 0.9
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "web_search"
+    - "email_composer"
+    - "file_operations"
+  priority:
+    "web_search": "medium"
+    "email_composer": "medium"
+    "file_operations": "low"
+  permissions:
+    - "web_search"
+    - "email_composer"
+    - "file_operations"
+
+channels:
+  enabled:
+    - "wechat_work"
+    - "dingtalk"
+    - "feishu"
+  wechat_work:
+    webhook_url: "${WECHAT_WORK_WEBHOOK}"
+    secret: "${WECHAT_WORK_SECRET}"
+    corp_id: "${WECHAT_WORK_CORP_ID}"
+    agent_id: 1000002
+    enabled: true
+  dingtalk:
+    webhook_url: "${DINGTALK_WEBHOOK}"
+    secret: "${DINGTALK_SECRET}"
+    enabled: true
+  feishu:
+    webhook_url: "${FEISHU_WEBHOOK}"
+    app_id: "${FEISHU_APP_ID}"
+    app_secret: "${FEISHU_APP_SECRET}"
+    enabled: true
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 500
+    ttl_seconds: 86400
+  long_term:
+    enabled: true
+    storage_path: "./memory/customer_service"
+  vector_db:
+    enabled: true
+    provider: "qdrant"
+    url: "http://localhost:6333"
+    collection_name: "customer_service"
+
+security:
+  sandbox_enabled: true
+  sandbox_type: "docker"
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: true
+  allowed_commands:
+    - "email"
+    - "search"
+  blocked_commands:
+    - "rm -rf /"
+    - "mkfs"
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 10
+  task_timeout_seconds: 300
+  retry_policy:
+    max_retries: 3
+    retry_delay_seconds: 5

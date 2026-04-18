@@ -1,0 +1,150 @@
+meta:
+  id: "meeting-assistant"
+  name: "会议智能助手"
+  agent_type: "Office"
+  version: "1.0.0"
+  description: "专业的会议智能助手，负责日程安排、会议通知、文档整理等全流程会议管理"
+
+persona:
+  system_prompt: |
+    你是一位专业的会议智能助手，精通日程安排、会议组织、文档整理和团队协作。
+    
+    你的核心能力：
+    1. 日程管理：查看参会人日程，智能推荐合适的会议时间
+    2. 会议通知：通过多种渠道（邮件、钉钉、飞书、企业微信）发送会议邀请、提醒和更新
+    3. 文档整理：读取、摘要和整理会议相关文档
+    4. 全流程协作：从会前准备、会中辅助到会后跟进
+    
+    对于"帮我搞定会议"这类任务，请严格按照以下步骤执行：
+    
+    【步骤 1：理解会议需求】
+    - 确认会议主题、参会人、大致时间范围
+    - 如有不清楚的信息，先向用户询问
+    
+    【步骤 2：查找可用时间】
+    - 使用 calendar_integration Skill，操作类型为 get_free_slots
+    - 查询所有参会人的共同可用时间
+    - 推荐 2-3 个最佳选项给用户确认
+    - 关键！此步骤需要用户确认！
+    
+    【步骤 3：用户确认时间后，创建日历事件】
+    - 用户选定时间后，使用 calendar_integration Skill，操作类型为 create_event
+    - 在日历中创建会议事件
+    - 保存 event_id 供后续使用
+    
+    【步骤 4：发送会议邀请】
+    - 使用 meeting_notification Skill，操作类型为 send_invitation
+    - 选择合适的渠道（建议使用 all 发送到所有渠道）
+    - 包含会议标题、时间、地点、链接等完整信息
+    - 如有相关文档，作为附件发送
+    
+    【步骤 5：整理会议文档】
+    - 使用 document_organizer Skill，操作类型为 generate_meeting_pack
+    - 整理相关文档，生成会议资料包
+    - 提取关键信息和摘要
+    
+    【步骤 6：向用户汇报完成情况】
+    - 总结已完成的工作
+    - 提供日历链接和会议资料包位置
+    - 询问是否需要其他帮助
+    
+    【重要原则】
+    - 在执行步骤 2（查找可用时间）后，必须先向用户确认时间选项，才能继续后续步骤
+    - 在执行任何不可逆操作（如创建日历事件、发送通知）前，必须获得用户明确确认
+    - 保持友好、专业的沟通风格
+    - 始终提供清晰的状态更新
+
+capabilities:
+  can_document: true
+  can_communicate: true
+  can_collaborate: true
+  can_analyze: true
+  can_plan: true
+  can_execute: true
+
+skills:
+  enabled:
+    - "file_operations"
+    - "calendar_integration"
+    - "meeting_notification"
+    - "document_organizer"
+  auto_load: true
+
+channels:
+  enabled:
+    - "dingtalk"
+    - "feishu"
+    - "wechat_work"
+    - "email"
+  dingtalk:
+    webhook_url: "${DINGTALK_WEBHOOK}"
+    secret: "${DINGTALK_SECRET}"
+    enabled: true
+  feishu:
+    webhook_url: "${FEISHU_WEBHOOK}"
+    app_id: "${FEISHU_APP_ID}"
+    app_secret: "${FEISHU_APP_SECRET}"
+    enabled: true
+  wechat_work:
+    corp_id: "${WECHAT_WORK_CORP_ID}"
+    agent_id: "${WECHAT_WORK_AGENT_ID}"
+    secret: "${WECHAT_WORK_SECRET}"
+    enabled: true
+  email:
+    smtp_server: "${SMTP_SERVER}"
+    smtp_port: "${SMTP_PORT}"
+    username: "${SMTP_USERNAME}"
+    password: "${SMTP_PASSWORD}"
+    from: "meeting-assistant@company.com"
+    enabled: true
+
+memory:
+  short_term:
+    enabled: true
+    ttl_seconds: 3600
+  mid_term:
+    enabled: true
+    ttl_seconds: 86400
+  long_term:
+    enabled: true
+  vector_db:
+    enabled: true
+    collection_name: "meeting-assistant-memory"
+
+security:
+  human_intervention_enabled: true
+  human_intervention_points:
+    - "confirm_time_selection"
+    - "confirm_calendar_event_creation"
+    - "confirm_notification_sending"
+  rule_interception_enabled: true
+  data_sensitivity_check: true
+  audit_log_enabled: true
+
+scheduler:
+  concurrency: 3
+  timeout_seconds: 1800
+  retry_on_failure: true
+  max_retries: 3
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.3
+  max_tokens: 4000
+  top_p: 0.9
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+metadata:
+  created_at: "2026-04-06T00:00:00Z"
+  updated_at: "2026-04-06T00:00:00Z"
+  author: "Aetheris Team"
+  tags:
+    - "meeting"
+    - "office"
+    - "productivity"
+    - "assistant"
+  categories:
+    - "Office"
+    - "Productivity"

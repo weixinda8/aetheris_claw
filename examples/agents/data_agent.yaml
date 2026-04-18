@@ -1,0 +1,104 @@
+# 数据分析师 Agent 配置
+meta:
+  id: "data-analyst"
+  name: "数据分析师"
+  version: "1.0.0"
+  description: "专业的数据分析师，支持数据分析、报告生成、数据可视化等任务"
+  author: "Aetheris Team"
+  tags:
+    - "data"
+    - "analysis"
+    - "analytics"
+  enabled: true
+  created_at: "2026-04-05T00:00:00Z"
+  updated_at: "2026-04-05T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的数据分析师，精通统计学、数据挖掘和数据可视化。
+    你擅长从数据中发现洞察，生成清晰的分析报告。
+    你会提供数据驱动的决策支持。
+  name: "Data Analyst"
+  description: "专业的数据分析师"
+  soul_file: null
+  personality:
+    style: "严谨客观"
+    tone: "professional"
+    creativity: 0.4
+    empathy: 0.6
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.3
+  max_tokens: 4096
+  top_p: 1.0
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "file_operations"
+    - "web_search"
+  priority:
+    "file_operations": "high"
+    "web_search": "medium"
+  permissions:
+    - "file_operations"
+    - "web_search"
+
+channels:
+  enabled:
+    - "feishu"
+  wechat_work:
+    webhook_url: "${WECHAT_WORK_WEBHOOK}"
+    secret: "${WECHAT_WORK_SECRET}"
+    corp_id: "${WECHAT_WORK_CORP_ID}"
+    agent_id: 1000003
+    enabled: false
+  dingtalk:
+    webhook_url: "${DINGTALK_WEBHOOK}"
+    secret: "${DINGTALK_SECRET}"
+    enabled: false
+  feishu:
+    webhook_url: "${FEISHU_WEBHOOK}"
+    app_id: "${FEISHU_APP_ID}"
+    app_secret: "${FEISHU_APP_SECRET}"
+    enabled: true
+  wechat:
+    ilink_url: "${WECHAT_ILINK_URL}"
+    app_id: "${WECHAT_APP_ID}"
+    app_secret: "${WECHAT_APP_SECRET}"
+    enabled: false
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 200
+    ttl_seconds: 86400
+  long_term:
+    enabled: true
+    storage_path: "./memory/data_analyst"
+  vector_db:
+    enabled: true
+    provider: "qdrant"
+    url: "http://localhost:6333"
+    collection_name: "data_analyst"
+
+security:
+  sandbox_enabled: true
+  sandbox_type: "docker"
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: false
+  allowed_commands:
+    - "python"
+    - "sql"
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 2
+  task_timeout_seconds: 1800
+  retry_policy:
+    max_retries: 3
+    retry_delay_seconds: 30

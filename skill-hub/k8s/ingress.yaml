@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aetheris-skill-hub-ingress
+  namespace: aetheris
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - skill-hub.aetheris.io
+    secretName: aetheris-skill-hub-tls
+  rules:
+  - host: skill-hub.aetheris.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: aetheris-skill-hub
+            port:
+              number: 80

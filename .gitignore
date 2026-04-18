@@ -1,0 +1,33 @@
+/target
+frontend/target
+**/*.rs.bk
+*.pdb
+Cargo.lock
+
+# Environment variables (sensitive configuration)
+.env
+.env.local
+.env.*.local
+
+# Production configuration files
+config/production.toml
+config/production.yaml
+config/production.json
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Trae IDE working directory
+.trae/
+
+# Java error logs
+hs_err_*.log
+replay_*.log

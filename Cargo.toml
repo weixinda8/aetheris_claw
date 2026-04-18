@@ -1,0 +1,103 @@
+[package]
+name = "aetheris"
+version = "0.1.0"
+edition = "2021"
+description = "AI-native, self-evolving, distributed, fully trusted complex task execution engine"
+license = "MIT"
+repository = "https://github.com/aetheris/aetheris"
+
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[dependencies]
+tokio = { version = "1.47.1", features = ["full"] }
+axum = { version = "0.8.4", features = ["ws"] }
+tonic = "0.12.3"
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "postgres", "chrono", "json", "uuid"] }
+qdrant-client = "1.15.0"
+wasmtime = { version = "36.0.0", features = ["async"] }
+rhai = "1.22.2"
+petgraph = "0.8.0"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "chrono"] }
+tracing-opentelemetry = "0.28"
+opentelemetry = { version = "0.29", features = ["trace", "metrics"] }
+opentelemetry-otlp = { version = "0.29", features = ["grpc-tonic", "metrics"] }
+opentelemetry-prometheus = "0.31"
+opentelemetry-semantic-conventions = "0.29"
+prometheus = "0.13"
+anyhow = "1.0"
+thiserror = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["v4", "serde"] }
+futures = "0.3"
+once_cell = "1.19"
+async-trait = "0.1"
+dashmap = "6.0"
+parking_lot = "0.12"
+bytes = "1.6"
+http = "1.1"
+http-body-util = "0.1"
+tower = { version = "0.4", features = ["full"] }
+prost = "0.13"
+prost-types = "0.13"
+bytesize = "1.3"
+num_cpus = "1.16"
+regex = "1.10"
+lazy_static = "1.4"
+hex = "0.4"
+sha2 = "0.10"
+hashlink = "0.9"
+toml = "0.8"
+serde_yaml = "0.9"
+reqwest = { version = "0.12", features = ["json"] }
+jsonwebtoken = "9.3"
+rand = "0.8"
+base64 = "0.22"
+axum-extra = { version = "0.9", features = ["typed-header"] }
+bollard = "0.19"
+dotenvy = "0.15"
+validator = { version = "0.18", features = ["derive"] }
+bcrypt = "0.15"
+opentelemetry_sdk = { version = "0.29", features = ["trace", "metrics", "experimental_async_runtime", "rt-tokio"] }
+tokio-modbus = "0.14"
+clap = { version = "4.5", features = ["derive"] }
+log = "0.4"
+semver = "1.0"
+json5 = "0.4"
+dirs = "5.0"
+tempfile = "3.10"
+bincode = "1.3"
+md5 = "0.7"
+urlencoding = "2.1"
+
+[build-dependencies]
+tonic-build = "0.12.3"
+
+[features]
+default = ["full"]
+edge-core = []
+edge-standard = ["edge-core"]
+full = ["edge-standard"]
+docker-tests = []
+qdrant-tests = []
+openai-tests = []
+azure-tests = []
+anthropic-tests = []
+opcua = []
+
+[dev-dependencies]
+tempfile = "3.10"
+criterion = "0.5"
+
+[[bench]]
+name = "benchmarks"
+harness = false

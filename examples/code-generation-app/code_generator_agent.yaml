@@ -1,0 +1,87 @@
+# 代码生成示例应用代理配置
+meta:
+  id: "code-generator-app"
+  name: "代码生成示例应用"
+  version: "1.0.0"
+  description: "展示AI辅助编程能力的示例应用，支持多种编程语言的代码生成"
+  author: "Aetheris Team"
+  tags:
+    - "code-generation"
+    - "ai-programming"
+    - "development"
+  enabled: true
+  created_at: "2026-04-18T00:00:00Z"
+  updated_at: "2026-04-18T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的AI代码生成助手，精通多种编程语言和开发框架。
+    你能够根据用户需求生成高质量、可执行的代码，并提供详细的解释。
+    你会遵循最佳实践，确保代码的可读性、可维护性和安全性。
+  name: "CodeGenerator"
+  description: "AI代码生成助手"
+  soul_file: null
+  personality:
+    style: "专业严谨"
+    tone: "friendly"
+    creativity: 0.6
+    empathy: 0.7
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.7
+  max_tokens: 2048
+  top_p: 0.9
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "code_generation"
+    - "file_operations"
+    - "web_search"
+  priority:
+    "code_generation": "high"
+    "file_operations": "medium"
+    "web_search": "low"
+  permissions:
+    - "code_generation"
+    - "file_operations"
+    - "web_search"
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 100
+    ttl_seconds: 3600
+  long_term:
+    enabled: true
+    storage_path: "./memory/code_generator"
+  vector_db:
+    enabled: true
+    provider: "qdrant"
+    url: "http://localhost:6333"
+    collection_name: "code_generator"
+
+security:
+  sandbox_enabled: true
+  sandbox_type: "docker"
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: false
+  allowed_commands:
+    - "git"
+    - "npm"
+    - "cargo"
+  blocked_commands:
+    - "rm -rf /"
+    - "mkfs"
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 5
+  task_timeout_seconds: 300
+  retry_policy:
+    max_retries: 3
+    retry_delay_seconds: 5

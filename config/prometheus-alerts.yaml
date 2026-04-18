@@ -1,0 +1,81 @@
+groups:
+  - name: aetheris_alerts
+    interval: 30s
+    rules:
+      - alert: HighTaskFailureRate
+        expr: |
+          rate(aetheris_task_failed_total[5m]) / rate(aetheris_task_total_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High task failure rate detected"
+          description: "Task failure rate is {{ $value | humanizePercentage }} for the last 5 minutes"
+      
+      - alert: HighAPIErrorRate
+        expr: |
+          rate(aetheris_api_errors_total[5m]) / rate(aetheris_api_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API error rate detected"
+          description: "API error rate is {{ $value | humanizePercentage }} for the last 5 minutes"
+      
+      - alert: ActiveTasksHigh
+        expr: aetheris_task_active > 100
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High number of active tasks"
+          description: "Current active tasks: {{ $value }}"
+      
+      - alert: TokensUsageHigh
+        expr: rate(aetheris_tokens_used_total[1h]) > 1000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High tokens usage"
+          description: "Tokens used in last hour: {{ $value | humanize }}"
+      
+      - alert: TaskDurationHigh
+        expr: |
+          histogram_quantile(0.95, sum(rate(task_duration_seconds_bucket[5m])) by (le)) > 300
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High task duration (P95)"
+          description: "95th percentile task duration: {{ $value }} seconds"
+      
+      - alert: NoActiveTasks
+        expr: aetheris_task_total_total == 0
+        for: 10m
+        labels:
+          severity: info
+        annotations:
+          summary: "No tasks processed in last 10 minutes"
+          description: "The system may be idle"
+
+  - name: system_alerts
+    interval: 30s
+    rules:
+      - alert: SystemMemoryHigh
+        expr: process_resident_memory_bytes / 1024 / 1024 / 1024 > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage: {{ $value }} GB"
+      
+      - alert: SystemCPUHigh
+        expr: rate(process_cpu_seconds_total[1m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage: {{ $value }}%"

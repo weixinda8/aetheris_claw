@@ -1,0 +1,111 @@
+# 运维助手 Agent 配置
+meta:
+  id: "ops-assistant"
+  name: "运维助手"
+  version: "1.0.0"
+  description: "专业的运维助手，支持系统监控、故障排查、自动化运维等任务"
+  author: "Aetheris Team"
+  tags:
+    - "operations"
+    - "devops"
+    - "monitoring"
+  enabled: true
+  created_at: "2026-04-05T00:00:00Z"
+  updated_at: "2026-04-05T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的运维工程师，精通系统监控、故障排查和自动化运维。
+    你善于快速定位问题，提供可靠的解决方案。
+    你会确保系统的稳定运行和高可用性。
+  name: "Ops Assistant"
+  description: "专业的运维助手"
+  soul_file: null
+  personality:
+    style: "果断可靠"
+    tone: "direct"
+    creativity: 0.2
+    empathy: 0.5
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.2
+  max_tokens: 2048
+  top_p: 1.0
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "file_operations"
+    - "web_search"
+  priority:
+    "file_operations": "high"
+    "web_search": "high"
+  permissions:
+    - "file_operations"
+    - "web_search"
+
+channels:
+  enabled:
+    - "wechat"
+    - "wechat_work"
+  wechat_work:
+    webhook_url: "${WECHAT_WORK_WEBHOOK}"
+    secret: "${WECHAT_WORK_SECRET}"
+    corp_id: "${WECHAT_WORK_CORP_ID}"
+    agent_id: 1000004
+    enabled: true
+  dingtalk:
+    webhook_url: "${DINGTALK_WEBHOOK}"
+    secret: "${DINGTALK_SECRET}"
+    enabled: false
+  feishu:
+    webhook_url: "${FEISHU_WEBHOOK}"
+    app_id: "${FEISHU_APP_ID}"
+    app_secret: "${FEISHU_APP_SECRET}"
+    enabled: false
+  wechat:
+    ilink_url: "${WECHAT_ILINK_URL}"
+    app_id: "${WECHAT_APP_ID}"
+    app_secret: "${WECHAT_APP_SECRET}"
+    enabled: true
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 500
+    ttl_seconds: 172800
+  long_term:
+    enabled: true
+    storage_path: "./memory/ops_assistant"
+  vector_db:
+    enabled: true
+    provider: "qdrant"
+    url: "http://localhost:6333"
+    collection_name: "ops_assistant"
+
+security:
+  sandbox_enabled: true
+  sandbox_type: "docker"
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: true
+  allowed_commands:
+    - "kubectl"
+    - "docker"
+    - "ssh"
+    - "systemctl"
+  blocked_commands:
+    - "reboot"
+    - "shutdown"
+    - "rm -rf /"
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 10
+  task_timeout_seconds: 900
+  retry_policy:
+    max_retries: 5
+    retry_delay_seconds: 60

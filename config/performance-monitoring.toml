@@ -1,0 +1,36 @@
+[monitoring]
+# 性能监控配置
+enabled = true
+collection_interval = "15s"
+retention_period = "7d"
+
+[alerts]
+# 告警配置
+enabled = true
+notification_channels = ["slack", "email", "pagerduty"]
+
+[alerts.thresholds]
+# 告警阈值配置
+cpu_usage_percent_warning = 70.0
+cpu_usage_percent_critical = 90.0
+
+memory_usage_percent_warning = 75.0
+memory_usage_percent_critical = 95.0
+
+disk_usage_percent_warning = 80.0
+disk_usage_percent_critical = 95.0
+
+task_failure_rate_warning = 0.05
+task_failure_rate_critical = 0.20
+
+api_error_rate_warning = 0.02
+api_error_rate_critical = 0.10
+
+response_time_p95_warning_ms = 500.0
+response_time_p95_critical_ms = 2000.0
+
+[performance_profiling]
+# 性能分析配置
+enabled = true
+sampling_rate = 0.1
+slow_query_threshold_ms = 100

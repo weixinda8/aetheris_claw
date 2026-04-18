@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aetheris-postgres
+    environment:
+      POSTGRES_USER: aetheris
+      POSTGRES_PASSWORD: aetheris_password
+      POSTGRES_DB: aetheris
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aetheris"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  qdrant:
+    image: qdrant/qdrant:v1.8.2
+    container_name: aetheris-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:6333/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  aetheris:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aetheris-app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://aetheris:aetheris_password@postgres:5432/aetheris
+      QDRANT_URL: http://qdrant:6333
+      RUST_LOG: info
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres_data:
+  qdrant_data:

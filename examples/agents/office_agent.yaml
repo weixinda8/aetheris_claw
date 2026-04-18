@@ -1,0 +1,95 @@
+# 办公助手 Agent 配置
+meta:
+  id: "office-assistant"
+  name: "办公助手"
+  version: "1.0.0"
+  description: "专业的办公助手，支持文档处理、日程安排、协作等任务"
+  author: "Aetheris Team"
+  tags:
+    - "office"
+    - "productivity"
+    - "collaboration"
+  enabled: true
+  created_at: "2026-04-05T00:00:00Z"
+  updated_at: "2026-04-05T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的办公助手，精通文档处理、日程安排和团队协作。
+    你善于整理信息、协调时间、促进沟通。
+    你会提供高效、周到的办公支持。
+  name: "Office Assistant"
+  description: "专业的办公助手"
+  soul_file: null
+  personality:
+    style: "高效周到"
+    tone: "polite"
+    creativity: 0.3
+    empathy: 0.8
+
+model:
+  provider: "openai"
+  model: "gpt-3.5-turbo"
+  temperature: 0.5
+  max_tokens: 1024
+  top_p: 0.95
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "file_operations"
+  priority:
+    "file_operations": "high"
+  permissions:
+    - "file_operations"
+
+channels:
+  enabled:
+    - "dingtalk"
+    - "feishu"
+  wechat_work:
+    webhook_url: "${WECHAT_WORK_WEBHOOK}"
+    secret: "${WECHAT_WORK_SECRET}"
+    corp_id: "${WECHAT_WORK_CORP_ID}"
+    agent_id: 1000002
+    enabled: false
+  dingtalk:
+    webhook_url: "${DINGTALK_WEBHOOK}"
+    secret: "${DINGTALK_SECRET}"
+    enabled: true
+  feishu:
+    webhook_url: "${FEISHU_WEBHOOK}"
+    app_id: "${FEISHU_APP_ID}"
+    app_secret: "${FEISHU_APP_SECRET}"
+    enabled: true
+  wechat:
+    ilink_url: "${WECHAT_ILINK_URL}"
+    app_id: "${WECHAT_APP_ID}"
+    app_secret: "${WECHAT_APP_SECRET}"
+    enabled: false
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 50
+    ttl_seconds: 7200
+  long_term:
+    enabled: true
+    storage_path: "./memory/office_assistant"
+  vector_db:
+    enabled: false
+
+security:
+  sandbox_enabled: false
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: true
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 3
+  task_timeout_seconds: 600
+  retry_policy:
+    max_retries: 2
+    retry_delay_seconds: 10

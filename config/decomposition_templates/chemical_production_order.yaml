@@ -1,0 +1,74 @@
+id: "chemical-production-order"
+name: "化工生产订单处理"
+description: "处理化工生产订单的标准流程，包括需求分析、设备检查、排产计划、报告审核"
+task_type: "chemical-production"
+
+sub_task_patterns:
+  - name_template: "分析订单需求和原料库存"
+    description_template: "分析客户订单需求，查询原料库存状态，计算生产需求与缺口"
+    complexity: "Medium"
+    estimated_duration_minutes: 15
+    required_capabilities:
+      - "can_analyze_data"
+    dependency_templates: []
+    priority: 10
+
+  - name_template: "检查设备状态和预测维护"
+    description_template: "检查生产线设备状态，执行预测性维护，生成设备健康报告"
+    complexity: "Complex"
+    estimated_duration_minutes: 20
+    required_capabilities:
+      - "can_operate"
+      - "can_analyze_data"
+    dependency_templates:
+      - "分析订单需求和原料库存"
+    priority: 9
+
+  - name_template: "生成生产排产计划"
+    description_template: "基于订单和设备状态生成生产排产计划，优化资源配置"
+    complexity: "VeryComplex"
+    estimated_duration_minutes: 30
+    required_capabilities:
+      - "can_operate"
+      - "can_analyze_data"
+    dependency_templates:
+      - "分析订单需求和原料库存"
+      - "检查设备状态和预测维护"
+    priority: 8
+
+  - name_template: "审核相关化验报告"
+    description_template: "审核相关化验原始记录和检测报告，确保质量合规"
+    complexity: "Medium"
+    estimated_duration_minutes: 25
+    required_capabilities:
+      - "can_analyze_data"
+      - "can_document"
+    dependency_templates:
+      - "分析订单需求和原料库存"
+    priority: 8
+
+  - name_template: "生成最终生产报告"
+    description_template: "整理所有子任务结果，生成最终生产报告并通知相关人员"
+    complexity: "Simple"
+    estimated_duration_minutes: 10
+    required_capabilities:
+      - "can_document"
+      - "can_communicate"
+    dependency_templates:
+      - "检查设备状态和预测维护"
+      - "生成生产排产计划"
+      - "审核相关化验报告"
+    priority: 7
+
+metadata:
+  keywords:
+    - "化工生产订单"
+    - "生产订单"
+    - "化工订单"
+    - "生产报告"
+    - "最终生产报告"
+    - "化工生产"
+    - "订单处理"
+  confidence: 0.95
+  requires_human_review: false
+  version: "1.0.0"

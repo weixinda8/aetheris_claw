@@ -1,0 +1,111 @@
+# 代码助手 Agent 配置
+meta:
+  id: "code-assistant"
+  name: "代码助手"
+  version: "1.0.0"
+  description: "专业的软件开发助手，支持代码审查、调试、重构等任务"
+  author: "Aetheris Team"
+  tags:
+    - "development"
+    - "coding"
+    - "review"
+  enabled: true
+  created_at: "2026-04-05T00:00:00Z"
+  updated_at: "2026-04-05T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的软件开发助手，精通多种编程语言和最佳实践。
+    你擅长代码审查、调试、重构和性能优化。
+    你会提供清晰、实用、可执行的建议。
+  name: "Code Assistant"
+  description: "专业的软件开发助手"
+  soul_file: null
+  personality:
+    style: "专业严谨"
+    tone: "friendly"
+    creativity: 0.5
+    empathy: 0.7
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.7
+  max_tokens: 2048
+  top_p: 0.9
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "code_generation"
+    - "file_operations"
+    - "web_search"
+  priority:
+    "code_generation": "high"
+    "file_operations": "medium"
+    "web_search": "low"
+  permissions:
+    - "code_generation"
+    - "file_operations"
+    - "web_search"
+
+channels:
+  enabled:
+    - "wechat_work"
+  wechat_work:
+    webhook_url: "${WECHAT_WORK_WEBHOOK}"
+    secret: "${WECHAT_WORK_SECRET}"
+    corp_id: "${WECHAT_WORK_CORP_ID}"
+    agent_id: 1000001
+    enabled: true
+  dingtalk:
+    webhook_url: "${DINGTALK_WEBHOOK}"
+    secret: "${DINGTALK_SECRET}"
+    enabled: false
+  feishu:
+    webhook_url: "${FEISHU_WEBHOOK}"
+    app_id: "${FEISHU_APP_ID}"
+    app_secret: "${FEISHU_APP_SECRET}"
+    enabled: false
+  wechat:
+    ilink_url: "${WECHAT_ILINK_URL}"
+    app_id: "${WECHAT_APP_ID}"
+    app_secret: "${WECHAT_APP_SECRET}"
+    enabled: false
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 100
+    ttl_seconds: 3600
+  long_term:
+    enabled: true
+    storage_path: "./memory/code_assistant"
+  vector_db:
+    enabled: true
+    provider: "qdrant"
+    url: "http://localhost:6333"
+    collection_name: "code_assistant"
+
+security:
+  sandbox_enabled: true
+  sandbox_type: "docker"
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: false
+  allowed_commands:
+    - "git"
+    - "npm"
+    - "cargo"
+  blocked_commands:
+    - "rm -rf /"
+    - "mkfs"
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 5
+  task_timeout_seconds: 300
+  retry_policy:
+    max_retries: 3
+    retry_delay_seconds: 5

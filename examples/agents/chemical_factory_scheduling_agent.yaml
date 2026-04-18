@@ -1,0 +1,135 @@
+meta:
+  id: "chemical-factory-scheduling"
+  name: "化工厂排产助手"
+  version: "1.0.0"
+  description: "专业的化工厂生产排产助手，支持订单接收、智能排产、微信通知"
+  author: "Chemical Factory IT Team"
+  tags:
+    - "chemical"
+    - "factory"
+    - "scheduling"
+    - "production"
+  enabled: true
+  created_at: "2026-04-14T00:00:00Z"
+  updated_at: "2026-04-14T00:00:00Z"
+
+persona:
+  system_prompt: |
+    你是一位专业的化工厂生产排产专家，精通化工生产流程、设备管理和资源优化。
+    你善于根据订单情况、设备状态、物料库存等因素，智能优化生产排产计划。
+    你会确保生产安全、高效、按时交付。
+
+    当接到新订单时，请按照以下步骤执行：
+    1. 理解订单需求（产品类型、数量、交期）
+    2. 检查可用资源（生产线、反应釜、操作员）
+    3. 检查设备健康状态
+    4. 生成排产计划
+    5. 通过微信通知相关人员
+    6. 等待确认
+    7. 如确认，执行排产
+
+    重要原则：
+    - 生成排产计划后，必须先通过微信通知相关人员并等待确认
+    - 确保生产安全是第一位的
+    - 优先保证紧急订单的交期
+
+  name: "化工排产助手"
+  description: "专业的化工厂生产排产助手"
+  soul_file: null
+  personality:
+    style: "严谨高效"
+    tone: "professional"
+    creativity: 0.3
+    empathy: 0.7
+
+model:
+  provider: "openai"
+  model: "gpt-4"
+  temperature: 0.2
+  max_tokens: 4096
+  top_p: 1.0
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+skills:
+  enabled:
+    - "production-monitoring"
+    - "predictive-maintenance"
+    - "data-analysis"
+    - "report-generation"
+  priority:
+    "production-monitoring": "high"
+    "predictive-maintenance": "high"
+    "data-analysis": "high"
+    "report-generation": "medium"
+  permissions:
+    - "production-monitoring"
+    - "predictive-maintenance"
+    - "data-analysis"
+    - "report-generation"
+
+channels:
+  enabled:
+    - "wechat"
+    - "wechat_work"
+  wechat_work:
+    webhook_url: "${WECHAT_WORK_WEBHOOK}"
+    secret: "${WECHAT_WORK_SECRET}"
+    corp_id: "${WECHAT_WORK_CORP_ID}"
+    agent_id: 1000005
+    enabled: true
+  dingtalk:
+    webhook_url: "${DINGTALK_WEBHOOK}"
+    secret: "${DINGTALK_SECRET}"
+    enabled: false
+  feishu:
+    webhook_url: "${FEISHU_WEBHOOK}"
+    app_id: "${FEISHU_APP_ID}"
+    app_secret: "${FEISHU_APP_SECRET}"
+    enabled: false
+  wechat:
+    ilink_url: "${WECHAT_ILINK_URL}"
+    app_id: "${WECHAT_APP_ID}"
+    app_secret: "${WECHAT_APP_SECRET}"
+    poll_interval_seconds: 5
+    max_retries: 3
+    enabled: true
+
+memory:
+  short_term:
+    enabled: true
+    max_items: 1000
+    ttl_seconds: 259200
+  long_term:
+    enabled: true
+    storage_path: "./memory/chemical_scheduling"
+  vector_db:
+    enabled: true
+    provider: "qdrant"
+    url: "http://localhost:6333"
+    collection_name: "chemical_scheduling"
+
+security:
+  sandbox_enabled: true
+  sandbox_type: "docker"
+  rule_interception_enabled: true
+  audit_log_enabled: true
+  human_intervention_enabled: true
+  human_intervention_points:
+    - "confirm_schedule"
+    - "confirm_equipment_maintenance"
+  allowed_commands:
+    - "python"
+    - "sql"
+  blocked_commands:
+    - "rm -rf /"
+    - "reboot"
+    - "shutdown"
+
+scheduler:
+  enabled: true
+  max_concurrent_tasks: 5
+  task_timeout_seconds: 3600
+  retry_policy:
+    max_retries: 3
+    retry_delay_seconds: 60

@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aetheris-skill-hub-config
+  namespace: aetheris
+data:
+  SERVER_HOST: "0.0.0.0"
+  SERVER_PORT: "8080"
+  DATABASE_URL: "postgresql://aetheris_skill_hub:aetheris_skill_hub_password@postgres:5432/aetheris_skill_hub"
+  QDRANT_URL: "http://qdrant:6333"
+  QDRANT_COLLECTION_NAME: "skills"
+  QDRANT_VECTOR_SIZE: "1536"
+  QDRANT_DISTANCE: "Cosine"
+  JWT_ISSUER: "aetheris-skill-hub"
+  JWT_EXPIRATION_HOURS: "24"
+  OTEL_ENABLED: "false"
+  OTEL_SERVICE_NAME: "aetheris-skill-hub"
+  OTEL_OTLP_ENDPOINT: "http://otel-collector:4317"
+  PROMETHEUS_ENABLED: "true"
+  PROMETHEUS_PORT: "9090"
+  PROMETHEUS_PATH: "/metrics"
+  DATABASE_MAX_CONNECTIONS: "20"
+  DATABASE_MIN_CONNECTIONS: "5"
+  DATABASE_CONNECT_TIMEOUT: "10"
+  DATABASE_IDLE_TIMEOUT: "600"

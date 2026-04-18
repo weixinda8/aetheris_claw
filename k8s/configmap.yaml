@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aetheris-config
+  namespace: aetheris
+data:
+  RUST_LOG: "info"
+  DATABASE_URL: "postgresql://aetheris:aetheris_password@aetheris-postgres:5432/aetheris"
+  QDRANT_URL: "http://aetheris-qdrant:6333"

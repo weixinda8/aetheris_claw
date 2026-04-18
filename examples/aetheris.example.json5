@@ -1,0 +1,116 @@
+{
+  version: "2.0.0",
+  name: "Aetheris",
+  description: "统一数字员工与 Agent/Skill 生态系统",
+
+  openclaw: {
+    enabled: true,
+    config_path: "~/.aetheris/openclaw.json5",
+    soul_path: "~/.aetheris/souls",
+    clawhub: {
+      api_url: "https://clawhub.aetheris.io",
+      api_key: null,
+      cache_dir: "~/.aetheris/clawhub/cache",
+      auto_sync: true,
+      sync_interval: 3600
+    }
+  },
+
+  soul: {
+    enabled: true,
+    default_soul: "Aetheris Assistant",
+    souls_dir: "~/.aetheris/souls",
+    auto_reload: false,
+    max_souls: 10
+  },
+
+  skills: {
+    priority: {
+      mandatory: [
+        "core_initialization",
+        "basic_communication"
+      ],
+      high: [
+        "web_search",
+        "code_generation",
+        "file_operations"
+      ],
+      medium: [
+        "data_analysis",
+        "image_processing"
+      ],
+      low: [
+        "entertainment",
+        "social_media"
+      ],
+      on_demand: [
+        "terminal",
+        "system_admin"
+      ],
+      disabled: []
+    },
+    agentskills: {
+      enabled: true,
+      manifest_dir: "~/.aetheris/agentskills",
+      search_enabled: true,
+      tag_filters: []
+    },
+    clawhub: {
+      enabled: true,
+      install_dir: "~/.aetheris/skills",
+      auto_update: false,
+      update_interval: 86400
+    },
+    lazy_load: {
+      enabled: true,
+      max_cached: 20,
+      ttl: 300
+    }
+  },
+
+  security: {
+    openclaw_layers: {
+      rule_block: {
+        enabled: true,
+        rules_path: "~/.aetheris/security/rules"
+      },
+      sandbox_isolation: {
+        enabled: true,
+        sandbox_type: "docker"
+      },
+      three_layer_quality_check: {
+        enabled: true,
+        auto_approve_low_risk: true
+      },
+      audit_signing: {
+        enabled: true,
+        key_path: "~/.aetheris/security/keys"
+      }
+    },
+    aetheris_layers: {
+      capability_security: {
+        enabled: true,
+        default_capabilities: []
+      },
+      multi_layer_sandbox: {
+        enabled: true,
+        layers: ["network", "filesystem", "process"]
+      }
+    }
+  },
+
+  runtime: {
+    log_level: "info",
+    max_workers: 4,
+    timeout_seconds: 300,
+    memory_limit_mb: 1024
+  },
+
+  api: {
+    enabled: true,
+    host: "127.0.0.1",
+    port: 8787,
+    cors_enabled: true,
+    auth_enabled: false
+  }
+}

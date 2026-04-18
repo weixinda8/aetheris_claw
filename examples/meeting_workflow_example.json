@@ -1,0 +1,123 @@
+{
+  "scenario": "帮我搞定会议",
+  "description": "完整的会议智能助手工作流程示例",
+  "steps": [
+    {
+      "step": 1,
+      "name": "用户提交任务",
+      "action": "提交任务到 Aetheris",
+      "api_request": {
+        "method": "POST",
+        "url": "http://localhost:8080/api/tasks",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "description": "帮我搞定下周一的项目评审会。需要邀请张三、李四、王五参加，时间大概在上午 10 点到下午 3 点之间。相关文档在 /data/documents/q2-project/ 目录下。",
+          "priority": 8,
+          "agent_type": "Office",
+          "agent_id": "meeting-assistant",
+          "tags": ["meeting", "project-review", "q2"],
+          "metadata": {
+            "meeting_type": "project-review",
+            "target_date": "2024-04-08",
+            "time_range": "10:00-15:00",
+            "document_folder": "/data/documents/q2-project/"
+          }
+        }
+      }
+    },
+    {
+      "step": 2,
+      "name": "Agent 理解需求",
+      "action": "Agent 分析任务描述，提取关键信息",
+      "extracted_info": {
+        "meeting_title": "项目评审会",
+        "attendees": ["张三", "李四", "王五"],
+        "target_date": "2024-04-08",
+        "time_range": "10:00-15:00",
+        "document_folder": "/data/documents/q2-project/"
+      }
+    },
+    {
+      "step": 3,
+      "name": "查找可用时间",
+      "action": "Agent 调用 calendar_integration Skill",
+      "skill_call": {
+        "skill": "calendar_integration",
+        "parameters": {
+          "operation": "get_free_slots",
+          "attendees": ["zhang.san@company.com", "li.si@company.com", "wang.wu@company.com"],
+          "duration_minutes": 90,
+          "start_date": "2024-04-08",
+          "end_date": "2024-04-08"
+        }
+      }
+    },
+    {
+      "step": 4,
+      "name": "用户确认时间",
+      "action": "Agent 向用户推荐时间选项，等待用户确认",
+      "agent_message": "我为您找到了以下可用时间：\n\n1. 4月8日 10:00-11:30\n2. 4月8日 14:00-15:30\n\n请选择您偏好的时间，或者告诉我其他要求。",
+      "user_confirmation": {
+        "selected_time": "4月8日 10:00-11:30",
+        "meeting_location": "3 号会议室",
+        "meeting_link": "https://teams.microsoft.com/l/meetup-join/..."
+      }
+    },
+    {
+      "step": 5,
+      "name": "创建日历事件",
+      "action": "Agent 调用 calendar_integration Skill 创建日历事件",
+      "skill_call": {
+        "skill": "calendar_integration",
+        "operation": "create_event",
+        "attendees": ["zhang.san@company.com", "li.si@company.com", "wang.wu@company.com"],
+        "event_title": "Q2 项目评审会",
+        "event_description": "讨论 Q2 项目进度和下一阶段计划",
+        "location": "3 号会议室",
+        "start_time": "2024-04-08T10:00:00+08:00",
+        "end_time": "2024-04-08T11:30:00+08:00"
+      }
+    },
+    {
+      "step": 6,
+      "name": "发送会议邀请",
+      "action": "Agent 调用 meeting_notification Skill 发送邀请",
+      "skill_call": {
+        "skill": "meeting_notification",
+        "operation": "send_invitation",
+        "channel": "all",
+        "recipients": ["zhang.san@company.com", "li.si@company.com", "wang.wu@company.com"],
+        "meeting_title": "Q2 项目评审会",
+        "meeting_time": "2024-04-08 10:00-11:30",
+        "meeting_location": "3 号会议室",
+        "meeting_description": "讨论 Q2 项目进度和下一阶段计划",
+        "meeting_link": "https://teams.microsoft.com/l/meetup-join/...",
+        "template": "formal"
+      }
+    },
+    {
+      "step": 7,
+      "name": "整理会议文档",
+      "action": "Agent 调用 document_organizer Skill 整理文档",
+      "skill_call": {
+        "skill": "document_organizer",
+        "operation": "generate_meeting_pack",
+        "file_paths": [
+          "/data/documents/q2-project/project-plan.pdf",
+          "/data/documents/q2-project/design-doc.docx",
+          "/data/documents/q2-project/progress-report.xlsx"
+        ],
+        "output_format": "pdf",
+        "include_toc": true
+      }
+    },
+    {
+      "step": 8,
+      "name": "任务完成",
+      "action": "Agent 向用户汇报完成情况",
+      "agent_message": "✅ 会议安排完成！\n\n📅 会议信息：\n- 时间：2024-04-08 10:00-11:30\n- 地点：3 号会议室\n- 参会人：张三、李四、王五\n\n📧 通知已通过以下渠道发送：\n- 邮件\n- 钉钉\n- 飞书\n\n📁 会议资料包：\n- 位置：/data/output/meeting-pack-20240408.pdf\n- 包含 3 个文档，共 120 页\n\n📆 日历链接：\nhttps://outlook.office.com/calendar/item/event_12345\n\n还需要其他帮助吗？"
+    }
+  ]
+}
